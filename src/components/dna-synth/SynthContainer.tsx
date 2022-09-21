@@ -2,8 +2,11 @@ import React, {ChangeEvent, useState} from "react";
 import {now, Synth} from "tone";
 import dnaMap from "./dna-map";
 import {window} from "../../util/string-functions";
-import soundMap from "./animo-note-map";
-import animoNoteMap from "./animo-note-map";
+import soundMap, {COMMON_NOTES} from "./animo-note-map";
+import {Button, Container, Stack, TextField} from "@mui/material";
+import Selector from "../inputs/Selector";
+import {AminoAcidEnum} from "./AminoAcidEnum";
+import AminoNoteConfiguration from "./amino-note-cofiguration-panel/AminoNoteConfiguration";
 
 const SynthContainer = (): JSX.Element => {
     const [dnaSequence, setDNASequence] = useState("");
@@ -43,16 +46,16 @@ const SynthContainer = (): JSX.Element => {
     }
 
     return (
-        <div>
-            <div>
-                <textarea onChange={onInput}/>
-                <button onClick={onClick}>Click to make noise</button>
-            </div>
-            <div>
-                <textarea onChange={onNoteInput}/>
-                <button onClick={onClickTestNote}>Click to test note</button>
-            </div>
-        </div>
+        <Container  maxWidth="sm">
+            <Stack>
+                <TextField onChange={onInput} multiline={true}></TextField>
+                <Button onClick={onClick}>Click to make noise</Button>
+                <TextField onChange={onNoteInput} multiline={true}></TextField>
+                <Button onClick={onClickTestNote}>Click to test note</Button>
+                <AminoNoteConfiguration/>
+            </Stack>
+        </Container>
+
     );
 };
 
