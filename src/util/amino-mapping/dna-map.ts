@@ -69,4 +69,9 @@ const dnaCodonMapping = {
 
 const dnaMap = new Map(Object.entries(dnaCodonMapping));
 
+export const toAminoAcid = (codon: string): AminoAcidEnum => {
+    const aminoAcid = dnaMap.get(codon);
+    return !!aminoAcid ? aminoAcid : AminoAcidEnum.SERINE;
+}
+
 export default dnaMap;

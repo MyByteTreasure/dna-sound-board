@@ -1,40 +1,25 @@
 import React, {ChangeEvent, useState} from "react";
-import {now, Synth} from "tone";
-import dnaMap from "./dna-map";
-import {window} from "../../util/string-functions";
-import soundMap, {COMMON_NOTES} from "./animo-note-map";
 import {Button, Container, Stack, TextField} from "@mui/material";
-import Selector from "../inputs/Selector";
-import {AminoAcidEnum} from "./AminoAcidEnum";
 import AminoNoteConfiguration from "./amino-note-cofiguration-panel/AminoNoteConfiguration";
+import playMusic from "../../util/music-machine/music-machine";
+import textToNotes from "../../util/amino-mapping/codon-to-amino";
+import animoNoteMap, {soundMapping} from "../../util/amino-mapping/animo-note-map";
+import {AminoAcidEnum} from "../../util/amino-mapping/AminoAcidEnum";
+import {Note} from "tone/build/esm/core/type/NoteUnits";
 
 const SynthContainer = (): JSX.Element => {
     const [dnaSequence, setDNASequence] = useState("");
     const [note, setNote] = useState("");
-    const synth = new Synth().toDestination();
+    const [aminoToNote, setAminoToNotes] = useState(soundMapping)
 
     const onClick = () => {
-        console.log(dnaSequence);
-        console.log(dnaMap);
-        const start: number = now()
 
-        const condons = window(dnaSequence, 3);
-        condons
-            .map(el => el.toUpperCase())
-            .map(el => dnaMap.get(el))
-            .filter(el => !!el)
-            .map((el, index) => {
-                return {el: soundMap.get(el ? el : "C4"), index: index}
-            })
-            .forEach(el => {
-                console.log(el.el)
-                synth.triggerAttackRelease(el.el ? el.el : "C4", "8n", start + (0.25 * el.index));
-            })
+        const notes = textToNotes(dnaSequence, aminoToNote);
+        playMusic(notes);
     }
 
     const onClickTestNote = () => {
-        synth.triggerAttackRelease(note, "8n");
-
+        //playMusic([note])
     }
 
     const onInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -45,6 +30,14 @@ const SynthContainer = (): JSX.Element => {
         setNote(event.target.value)
     }
 
+    const onConfigureAminoAcid = (amino: AminoAcidEnum, note: string) => {
+        console.log(amino)
+        console.log(note)
+        const newMapping = {...aminoToNote, [amino]: note as Note};
+        console.log(newMapping)
+        setAminoToNotes(newMapping);
+    }
+
     return (
         <Container  maxWidth="sm">
             <Stack>
@@ -52,7 +45,7 @@ const SynthContainer = (): JSX.Element => {
                 <Button onClick={onClick}>Click to make noise</Button>
                 <TextField onChange={onNoteInput} multiline={true}></TextField>
                 <Button onClick={onClickTestNote}>Click to test note</Button>
-                <AminoNoteConfiguration/>
+                <AminoNoteConfiguration onConfigureAminoAcid={onConfigureAminoAcid} mapping={aminoToNote}/>
             </Stack>
         </Container>
 

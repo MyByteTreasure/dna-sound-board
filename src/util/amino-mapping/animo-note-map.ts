@@ -1,10 +1,11 @@
 import {Note} from "tone/build/esm/core/type/NoteUnits";
+import {AminoAcidEnum} from "./AminoAcidEnum";
 
 export interface NoteMapping {
     [id: string]: Note
 }
 
-export const COMMON_NOTES = [0, 1, 2, 4, 5, 6, 7].flatMap((el) => ["C" + el, "D" + el, "E" + el, "F" + el, "G" + el, "A" + el, "B" + el])
+export const COMMON_NOTES = [0, 1, 2, 3, 4, 5, 6, 7].flatMap((el) => ["C" + el, "D" + el, "E" + el, "F" + el, "G" + el, "A" + el, "B" + el])
 
 export const ALL_NOTES = [
     "Cbb-4" ,
@@ -569,8 +570,8 @@ export const ALL_NOTES = [
     "Bx11"
 ]
 
-const soundMapping: NoteMapping = {
-    PHENYLALANINE: "Gb-1",
+export const soundMapping: NoteMapping = {
+    PHENYLALANINE: "C1",
     LEUCINE: "C1",
     ISOLEUCINE: "C2",
     METHIONINE: "C3",
@@ -595,5 +596,9 @@ const soundMapping: NoteMapping = {
 }
 
 const soundMap = new Map(Object.entries(soundMapping));
+
+export const toNote = (aminoAcid: AminoAcidEnum, mapping: NoteMapping): Note => {
+    return mapping[aminoAcid];
+}
 
 export default soundMap;

@@ -1,18 +1,22 @@
 import React from "react";
-import Selector from "../../inputs/Selector";
-import {AminoAcidEnum} from "../AminoAcidEnum";
-import {COMMON_NOTES} from "../animo-note-map";
 import AminoNoteSelectors from "./AminoNoteSelectors";
-import {FormControl, Stack} from "@mui/material";
+import {Stack} from "@mui/material";
+import {AminoAcidEnum} from "../../../util/amino-mapping/AminoAcidEnum";
+import {Note} from "tone/build/esm/core/type/NoteUnits";
+import {NoteMapping} from "../../../util/amino-mapping/animo-note-map";
 
-const AminoNoteConfiguration = (): JSX.Element => {
+export type AminoNoteConfigurationProps = {
+    mapping: NoteMapping,
+    onConfigureAminoAcid: (amino: AminoAcidEnum, note: string) => void
+}
+const AminoNoteConfiguration = (props: AminoNoteConfigurationProps): JSX.Element => {
 
     return (
         <Stack
             direction="row"
             flexWrap={"wrap"}
         >
-                <AminoNoteSelectors/>
+                <AminoNoteSelectors onConfigureAminoAcid={props.onConfigureAminoAcid} mapping={props.mapping}/>
         </Stack>
     );
 };

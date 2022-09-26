@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {Note} from "tone/build/esm/core/type/NoteUnits";
+import {AminoAcidEnum} from "../../util/amino-mapping/AminoAcidEnum";
 
 interface MenuItemProps {
     value: string,
@@ -7,23 +9,25 @@ interface MenuItemProps {
 }
 
 export interface SelectorProps {
-    selectLabel: string,
-    options: MenuItemProps[]
+    selectLabel: AminoAcidEnum,
+    value: string,
+    options: MenuItemProps[],
+    onConfigureAminoAcid: (amino: AminoAcidEnum, note: string) => void
 }
 
 const Selector =  (props: SelectorProps): JSX.Element => {
 
-    const [selectedValue, setSelectedValue] = useState(props.options[0].value);
+    console.log(props)
 
     const select = (event: SelectChangeEvent) => {
-        setSelectedValue(event.target.value);
+        props.onConfigureAminoAcid(props.selectLabel, event.target.value);
     }
 
     return (
         <FormControl sx={{margin: 2, minWidth: 150 }} size="small">
             <InputLabel id={props.selectLabel}>{props.selectLabel}</InputLabel>
             <Select
-                value={selectedValue}
+                value={props.value}
                 label={props.selectLabel}
                 labelId={props.selectLabel}
                 onChange={select}
@@ -31,7 +35,6 @@ const Selector =  (props: SelectorProps): JSX.Element => {
                 {props.options.map(el => <MenuItem value={el.value} key={el.value}>{el.label}</MenuItem>)}
             </Select>
         </FormControl>
-
     );
 };
 
